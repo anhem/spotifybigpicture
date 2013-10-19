@@ -13,8 +13,9 @@ PATTERN = 'size="([^"]*)"'
 
 print '---[Spotify Big Picture]---'
 parser = argparse.ArgumentParser()
-parser.add_argument("-r", "--restore", help="Restore Spotify to default font size", action="store_true")
-parser.add_argument("-s", "--size", type=int, help="The size fonts should be changed with (positive=up, negative=down)")
+parser.add_argument('-r', '--restore', help='Restore Spotify to default font size', action='store_true')
+parser.add_argument('-s', '--size', type=int, help='The size fonts should be changed with (positive=up, negative=down)')
+parser.add_argument('-p', '--path', help='Specify path to Spotify resources.zip/skin.xml if not detected automatically')
 args = parser.parse_args()
 
 def backupFile(filePath):
@@ -95,20 +96,34 @@ else:
     if args.size:
         fontSize = args.size
 
-    if sys.platform.startswith('linux'):
-        backupFile(FILEPATH_LINUX)
-        extractedDir = extractArchive(FILEPATH_LINUX)
-        modifySkin(extractedDir + '/' + 'skin.xml', fontSize)
-        compressArchive(extractedDir, FILEPATH_LINUX)
-    elif sys.platform == 'darwin':
-        backupFile(FILEPATH_OSX)
-        modifySkin(FILEPATH_OSX, fontSize)
-    elif sys.platform.startswith('win'):
-        filePath_windows = getResourcePathForWindows()
-        backupFile(filePath_windows)
-        extractedDir = extractArchive(filePath_windows)
-        modifySkin(extractedDir + '\\' + 'skin.xml', fontSize)
-        compressArchive(extractedDir, filePath_windows)
+    if args.path:
+        if args.path.endswith('resources.zip'):
+            backupFile(args.path)
+            extractedDir = extractArchive(args.path)
+            modifySkin(extractedDir + '/' + 'skin.xml', fontSize)
+            compressArchive(extractedDir, args.path)
+        elif args.path.endswith('skin.xml'):
+            backupFile(args.path)
+            modifySkin(args.path, fontSize)
+        else:
+            print 'File not recognized, must be either resources.zip or skin.xml'
+            exit(0)
     else:
-        print 'OS not recognized!'
+        if sys.platform.startswith('linux'):
+            backupFile(FILEPATH_LINUX)
+            extractedDir = extractArchive(FILEPATH_LINUX)
+            modifySkin(extractedDir + '/' + 'skin.xml', fontSize)
+            compressArchive(extractedDir, FILEPATH_LINUX)
+        elif sys.platform == 'darwin':
+            backupFile(FILEPATH_OSX)
+            modifySkin(FILEPATH_OSX, fontSize)
+        elif sys.platform.startswith('win'):
+            filePath_windows = getResourcePathForWindows()
+            backupFile(filePath_windows)
+            extractedDir = extractArchive(filePath_windows)
+            modifySkin(extractedDir + '\\' + 'skin.xml', fontSize)
+            compressArchive(extractedDir, filePath_windows)
+        else:
+            print 'OS not recognized, use --path <file path> to manually specify the resources.zip or skin.xml'
+            exit(0)
 print 'Done'
