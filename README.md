@@ -14,35 +14,26 @@ Python 2.7 http://www.python.org/download/
 
 Make sure Spotify is **not** running and then execute the following command:
 
-###Linux
-```
-> sudo python spotifyBigPicture.py
-```
-
-###OS X (Not tested)
 ```
 > python spotifyBigPicture.py
 ```
+Note that for **Linux** it must be executed with *sudo*
 
-###Windows
+### Restore changes
+
+To restore Spotify to default font size execute the script with the --restore flag
+
 ```
-> python spotifyBigPicture.py
+> python spotifyBigPicture.py --restore
 ```
 
-# Restore changes
+### Font size
 
-If after executing the script you realize this was not what you wanted you can restore to the default font size by doing the following:
+To specify your own font size use the --size flag. 
+The size specified is relative, and changes will be based on its original value and the specified value.
+Negative size is also allowed, to reduce the font size.
+```
+> python spotifyBigPicture.py --size 10
+```
 
-## Linux
-
-Go to **/opt/spotify/spotify-client/Data** and replace *resources.zip* with *resources.zip.bak*
-
-## OS X
-
-Go to **/Applications/Spotify.app/Contents/Resources/** and replace *skin.xml* with *skin.xml.bak*
-
-## Windows
-
-Go to **[Spotify installation directory]\Data\** and replace *resources.zip* with *resources.zip.bak*
-
-the installation directory for Spotify should be similar to **C:\Program Files (x86)\Spotify**
+The default size is *8*.
