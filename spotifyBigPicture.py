@@ -81,14 +81,21 @@ def getResourcePathForWindows():
     return value + '\\Data\\resources.zip'
 
 if args.restore:
-    if sys.platform.startswith('linux'):
+    if args.path:
+        if args.path.endswith('resources.zip') or args.path.endswith('skin.xml'):
+            restoreBackup(args.path)
+        else:
+            print 'File not recognized, must be either resources.zip or skin.xml'
+            exit(0)
+    elif sys.platform.startswith('linux'):
         restoreBackup(FILEPATH_LINUX)
     elif sys.platform == 'darwin':
         restoreBackup(FILEPATH_OSX)
     elif sys.platform.startswith('win'):
         restoreBackup(getResourcePathForWindows())
     else:
-        print 'OS not recognized!'
+        print 'OS not recognized, use --path <file path> to manually specify the resources.zip or skin.xml'
+        exit(0)
 else:
     fontSize = DEFAULT_FONT_SIZE
     if args.size:
