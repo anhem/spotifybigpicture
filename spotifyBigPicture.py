@@ -4,12 +4,13 @@ import tempfile
 import zipfile
 import re
 import os
+import _winreg
 
 FILE_NAME = 'skin.xml'
 PROPORTION = 8
 PATTERN = 'size="([^"]*)"'
 
-print('---[Spotify Big Picture]---')
+print '---[Spotify Big Picture]---'
 
 def backupFile(filePath):
     backupPath = filePath + '.bak'
@@ -65,14 +66,18 @@ if (sys.platform.startswith('linux')):
     extractedDir = extractArchive(resources)
     modifySkin(extractedDir + '/' + FILE_NAME)
     compressArchive(extractedDir, resources)
-    print 'Done'
 elif (sys.platform == 'darwin'):
     skin = '/Applications/Spotify.app/Contents/Resources/skin.xml'
     backupFile(skin)
     modifySkin(skin)
-    print 'Done'
-elif (sys.platform == 'windows'):
-    print 'Not implemented'
+elif (sys.platform.startswith('win')):
+    key = _winreg.OpenKey(_winreg.HKEY_CURRENT_USER, "Software\\Spotify")
+    value = _winreg.QueryValueEx(key, "")[0]
+    resources = value + '\\Data\\resources.zip'
+    backupFile(resources)
+    extractedDir = extractArchive(resources)
+    modifySkin(extractedDir + '\\' + FILE_NAME)
+    compressArchive(extractedDir, resources)
 else:
     print 'OS not recognized!'
-
+print 'Done'
