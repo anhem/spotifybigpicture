@@ -6,10 +6,10 @@ This Python script modifies Spotify *skin.xml* to create larger fonts in the Spo
 It is mostly useful if Spotify is being used on a larger screen such as a TV with high resolution, 
 which results in very small fonts in the Spotify client.
 
-# Requrements
+# Requirements
 
 * Python 2.7 - http://www.python.org/download/
-* Linux, OS X or Windows
+* **Linux**, **OS X** or **Windows**
 
 # Executing the script
 
@@ -37,4 +37,4 @@ Negative size is also allowed, to reduce the font size.
 > python spotifyBigPicture.py --size 10
 ```
 
-The default size is *8*.
+The default size is **8**.
