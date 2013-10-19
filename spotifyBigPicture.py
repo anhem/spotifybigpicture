@@ -21,20 +21,18 @@ args = parser.parse_args()
 def backupFile(filePath):
     backupPath = filePath + '.bak'
     print 'Creating backup of %s to %s' % (filePath, backupPath)
-    try:
-        with open(backupPath):
-            print 'backup already exists'
-    except IOError:
-            shutil.copy2(filePath, backupPath)
+    if os.path.exists(backupPath):
+        print 'backup already exists'
+    else:
+        shutil.copy2(filePath, backupPath)
 
 def restoreBackup(filePath):
     backupPath = filePath + '.bak'
     print 'restoring default font size from backup %s' % backupPath
-    try:
-        with open(backupPath):
-            os.remove(filePath)
-            os.rename(backupPath, filePath)
-    except IOError:
+    if os.path.exists(backupPath):
+        os.remove(filePath)
+        os.rename(backupPath, filePath)
+    else:
         print 'No backup file found, restore not possible'
 
 def extractArchive(filePath):
