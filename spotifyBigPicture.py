@@ -4,12 +4,18 @@ import tempfile
 import zipfile
 import re
 import os
+import argparse
 
-FILE_NAME = 'skin.xml'
-PROPORTION = 8
+FILEPATH_OSX = '/Applications/Spotify.app/Contents/Resources/skin.xml'
+FILEPATH_LINUX = '/opt/spotify/spotify-client/Data/resources.zip'
+DEFAULT_FONT_SIZE = 8
 PATTERN = 'size="([^"]*)"'
 
 print '---[Spotify Big Picture]---'
+parser = argparse.ArgumentParser()
+parser.add_argument("-r", "--restore", help="Restore Spotify to default font size", action="store_true")
+parser.add_argument("-s", "--size", type=int, help="The size fonts should be changed with (positive=up, negative=down)")
+args = parser.parse_args()
 
 def backupFile(filePath):
     backupPath = filePath + '.bak'
@@ -19,6 +25,16 @@ def backupFile(filePath):
             print 'backup already exists'
     except IOError:
             shutil.copy2(filePath, backupPath)
+
+def restoreBackup(filePath):
+    backupPath = filePath + '.bak'
+    print 'restoring default font size from backup %s' % backupPath
+    try:
+        with open(backupPath):
+            os.remove(filePath)
+            os.rename(backupPath, filePath)
+    except IOError:
+        print 'No backup file found, restore not possible'
 
 def extractArchive(filePath):
     extractDir = tempfile.mkdtemp()
@@ -43,8 +59,8 @@ def compressArchive(srcDir, destFile):
     finally:
         zf.close()
 
-def modifySkin(skinFile):
-    print 'updating %s with sizes of +%s' % (skinFile, PROPORTION)
+def modifySkin(skinFile, fontSize):
+    print 'updating %s with font size %s' % (skinFile, fontSize)
     newSkinFile = skinFile + '.new'
     reg = re.compile(PATTERN)
     with open(skinFile, 'r') as infile:
@@ -53,31 +69,46 @@ def modifySkin(skinFile):
                 value = reg.search(line)
                 if value is not None:
                     oldSize = value.group(1)
-                    newSize = int(oldSize) + PROPORTION
+                    newSize = int(oldSize) + fontSize
                     line = re.sub(reg, 'size="' + str(newSize) + '"', line)
                 outfile.write(line)
     os.remove(skinFile)
     os.rename(newSkinFile, skinFile)
 
-if (sys.platform.startswith('linux')):
-    resources = '/opt/spotify/spotify-client/Data/resources.zip'
-    backupFile(resources)
-    extractedDir = extractArchive(resources)
-    modifySkin(extractedDir + '/' + FILE_NAME)
-    compressArchive(extractedDir, resources)
-elif (sys.platform == 'darwin'):
-    skin = '/Applications/Spotify.app/Contents/Resources/skin.xml'
-    backupFile(skin)
-    modifySkin(skin)
-elif (sys.platform.startswith('win')):
+def getResourcePathForWindows():
     import _winreg
     key = _winreg.OpenKey(_winreg.HKEY_CURRENT_USER, "Software\\Spotify")
     value = _winreg.QueryValueEx(key, "")[0]
-    resources = value + '\\Data\\resources.zip'
-    backupFile(resources)
-    extractedDir = extractArchive(resources)
-    modifySkin(extractedDir + '\\' + FILE_NAME)
-    compressArchive(extractedDir, resources)
+    return value + '\\Data\\resources.zip'
+
+if args.restore:
+    if sys.platform.startswith('linux'):
+        restoreBackup(FILEPATH_LINUX)
+    elif sys.platform == 'darwin':
+        restoreBackup(FILEPATH_OSX)
+    elif sys.platform.startswith('win'):
+        restoreBackup(getResourcePathForWindows())
+    else:
+        print 'OS not recognized!'
 else:
-    print 'OS not recognized!'
+    fontSize = DEFAULT_FONT_SIZE
+    if args.size:
+        fontSize = args.size
+
+    if sys.platform.startswith('linux'):
+        backupFile(FILEPATH_LINUX)
+        extractedDir = extractArchive(FILEPATH_LINUX)
+        modifySkin(extractedDir + '/' + 'skin.xml', fontSize)
+        compressArchive(extractedDir, FILEPATH_LINUX)
+    elif sys.platform == 'darwin':
+        backupFile(FILEPATH_OSX)
+        modifySkin(FILEPATH_OSX, fontSize)
+    elif sys.platform.startswith('win'):
+        filePath_windows = getResourcePathForWindows()
+        backupFile(filePath_windows)
+        extractedDir = extractArchive(filePath_windows)
+        modifySkin(extractedDir + '\\' + 'skin.xml', fontSize)
+        compressArchive(extractedDir, filePath_windows)
+    else:
+        print 'OS not recognized!'
 print 'Done'
