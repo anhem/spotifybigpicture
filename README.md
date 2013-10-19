@@ -8,7 +8,8 @@ which results in very small fonts in the Spotify client.
 
 # Requrements
 
-Python 2.7 http://www.python.org/download/
+* Python 2.7 - http://www.python.org/download/
+* Linux, OS X or Windows
 
 # Executing the script
 
