@@ -4,7 +4,6 @@ import tempfile
 import zipfile
 import re
 import os
-import _winreg
 
 FILE_NAME = 'skin.xml'
 PROPORTION = 8
@@ -71,6 +70,7 @@ elif (sys.platform == 'darwin'):
     backupFile(skin)
     modifySkin(skin)
 elif (sys.platform.startswith('win')):
+    import _winreg
     key = _winreg.OpenKey(_winreg.HKEY_CURRENT_USER, "Software\\Spotify")
     value = _winreg.QueryValueEx(key, "")[0]
     resources = value + '\\Data\\resources.zip'
