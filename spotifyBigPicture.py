@@ -14,7 +14,7 @@ RESOURCES_ZIP = 'resources.zip'
 RESOURCES_PATH_OSX = '/Applications/Spotify.app/Contents/' + RESOURCES
 RESOURCES_PATH_LINUX = '/opt/spotify/spotify-client/Data/' + RESOURCES_ZIP
 DEFAULT_FONT_SIZE = 8
-PATTERN = 'size="([^"]*)"'
+PATTERN = '(size: ([^;]*))|(size:([^;]*))|(size="([^"]*)")|(size=\'([^\']*)\')'
 
 print '---[Spotify Big Picture]---'
 parser = argparse.ArgumentParser()
@@ -73,18 +73,18 @@ def getXmlFiles(resourcesPath):
 
 def modifyXmlFiles(resourcesPath, fontSize):
     fileList = getXmlFiles(resourcesPath)
+    reg = re.compile(PATTERN)
     for xmlFile in fileList:
         print 'updating %s with font size %s' % (xmlFile, fontSize)
         newXmlFile = xmlFile + '.new'
-        reg = re.compile(PATTERN)
         with open(xmlFile, 'r') as infile:
             with open(newXmlFile, 'w') as outfile:
                 for line in infile:
-                    value = reg.search(line)
-                    if value is not None:
-                        oldSize = value.group(1)
-                        newSize = int(oldSize) + fontSize
-                        line = re.sub(reg, 'size="' + str(newSize) + '"', line)
+                    sizeValue = reg.search(line)
+                    if sizeValue:
+                        oldSize = re.search('\d+', sizeValue.group()).group()
+                        newSize = str(int(oldSize) + fontSize)
+                        line = re.sub(reg, sizeValue.group().replace(oldSize, newSize), line)
                     outfile.write(line)
         os.remove(xmlFile)
         os.rename(newXmlFile, xmlFile)
