@@ -20,7 +20,7 @@ print '---[Spotify Big Picture]---'
 parser = argparse.ArgumentParser()
 parser.add_argument('-r', '--restore', help='Restore Spotify to default font size', action='store_true')
 parser.add_argument('-s', '--size', type=int, help='The size fonts should be changed with (positive=up, negative=down)')
-parser.add_argument('-p', '--path', help='Specify path to Spotify resources.zip/skin.xml if not detected automatically')
+parser.add_argument('-p', '--path', help='Specify path to Spotify resources if not detected automatically')
 args = parser.parse_args()
 
 def backupResources(resourcesPath):
@@ -109,7 +109,7 @@ if args.restore:
     elif sys.platform.startswith(WIN):
         restoreResources(getResourcesPathForWindows())
     else:
-        print 'OS not recognized, use --path <file path> to manually specify the resources.zip or skin.xml'
+        print 'OS not recognized, use --path <file path> to manually specify %s or%s' % (RESOURCES_ZIP, RESOURCES)
         exit(0)
 else:
     fontSize = DEFAULT_FONT_SIZE
@@ -144,6 +144,6 @@ else:
             modifyXmlFiles(extractedDir, fontSize)
             compressArchive(extractedDir, filePath_windows)
         else:
-            print 'OS not recognized, use --path <file path> to manually specify the resources.zip or skin.xml'
+            print 'OS not recognized, use --path <file path> to manually specify %s or%s' % (RESOURCES_ZIP, RESOURCES)
             exit(0)
 print 'Done'
