@@ -74,8 +74,9 @@ def getXmlFiles(resourcesPath):
 def modifyXmlFiles(resourcesPath, fontSize):
     fileList = getXmlFiles(resourcesPath)
     reg = re.compile(PATTERN)
+    print 'using font size %s' % fontSize
     for xmlFile in fileList:
-        print 'updating %s with font size %s' % (xmlFile, fontSize)
+        print 'updating %s' % xmlFile
         newXmlFile = xmlFile + '.new'
         with open(xmlFile, 'r') as infile:
             with open(newXmlFile, 'w') as outfile:
@@ -100,7 +101,7 @@ if args.restore:
         if args.path.endswith(RESOURCES_ZIP) or args.path.endswith(RESOURCES):
             restoreResources(args.path)
         else:
-            print 'File not recognized, must be either %s or %s' % (RESOURCES_ZIP, RESOURCES)
+            print 'Path not recognized, must end with either %s or %s' % (RESOURCES_ZIP, RESOURCES)
             exit(0)
     elif sys.platform.startswith(LINUX):
         restoreResources(RESOURCES_PATH_LINUX)
@@ -126,7 +127,7 @@ else:
             backupResources(args.path)
             modifyXmlFiles(args.path, fontSize)
         else:
-            print 'File not recognized, must be either %s or %s' % (RESOURCES_ZIP, RESOURCES)
+            print 'Path not recognized, must end with either %s or %s' % (RESOURCES_ZIP, RESOURCES)
             exit(0)
     else:
         if sys.platform.startswith(LINUX):
@@ -144,6 +145,6 @@ else:
             modifyXmlFiles(extractedDir, fontSize)
             compressArchive(extractedDir, filePath_windows)
         else:
-            print 'OS not recognized, use --path <file path> to manually specify %s or %s' % (RESOURCES_ZIP, RESOURCES)
+            print 'OS not recognized, use --path <resources path> to manually specify Spotify %s or %s' % (RESOURCES_ZIP, RESOURCES)
             exit(0)
 print 'Done'
