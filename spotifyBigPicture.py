@@ -100,7 +100,7 @@ if args.restore:
         if args.path.endswith(RESOURCES_ZIP) or args.path.endswith(RESOURCES):
             restoreResources(args.path)
         else:
-            print 'File not recognized, must be either %s or%s' % (RESOURCES_ZIP, RESOURCES)
+            print 'File not recognized, must be either %s or %s' % (RESOURCES_ZIP, RESOURCES)
             exit(0)
     elif sys.platform.startswith(LINUX):
         restoreResources(RESOURCES_PATH_LINUX)
@@ -109,7 +109,7 @@ if args.restore:
     elif sys.platform.startswith(WIN):
         restoreResources(getResourcesPathForWindows())
     else:
-        print 'OS not recognized, use --path <file path> to manually specify %s or%s' % (RESOURCES_ZIP, RESOURCES)
+        print 'OS not recognized, use --path <file path> to manually specify %s or %s' % (RESOURCES_ZIP, RESOURCES)
         exit(0)
 else:
     fontSize = DEFAULT_FONT_SIZE
@@ -126,7 +126,7 @@ else:
             backupResources(args.path)
             modifyXmlFiles(args.path, fontSize)
         else:
-            print 'File not recognized, must be either %s or%s' % (RESOURCES_ZIP, RESOURCES)
+            print 'File not recognized, must be either %s or %s' % (RESOURCES_ZIP, RESOURCES)
             exit(0)
     else:
         if sys.platform.startswith(LINUX):
@@ -144,6 +144,6 @@ else:
             modifyXmlFiles(extractedDir, fontSize)
             compressArchive(extractedDir, filePath_windows)
         else:
-            print 'OS not recognized, use --path <file path> to manually specify %s or%s' % (RESOURCES_ZIP, RESOURCES)
+            print 'OS not recognized, use --path <file path> to manually specify %s or %s' % (RESOURCES_ZIP, RESOURCES)
             exit(0)
 print 'Done'
