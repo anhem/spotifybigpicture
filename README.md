@@ -40,7 +40,11 @@ To restore Spotify to default font size execute the script with the --restore fl
 ### Font size
 
 To specify your own font size use the --size flag. 
-The size specified is relative, and changes will be based on its original value and the specified value.
+The size specified is relative, and changes will be based on its original value plus specified value.
+
+For example if some parts of Spotify is using a font size of 20 and the script is executed with a font size of 10,
+then the new font size will be 30.
+
 Negative size is also allowed, to reduce the font size.
 ```
 > python spotifyBigPicture.py --size 10
