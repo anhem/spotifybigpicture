@@ -23,6 +23,12 @@ Make sure Spotify is **not** running and then execute the following command:
 ```
 Note that for **Linux** it must be executed with *sudo*
 
+Executing the script several times in a row will result in larger and larger fonts.
+For convenience you may instead specify the font size you want (see **Font size** below). 
+
+It is recommended to restore the font size to its default value (see **Restore changes** below) 
+before executing the script with a new font size.
+
 ### Restore changes
 
 To restore Spotify to default font size execute the script with the --restore flag
