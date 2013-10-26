@@ -1,10 +1,13 @@
 Spotify Big Picture
 =================
 
-This Python script modifies Spotify *skin.xml* to create larger fonts in the Spotify client.
+This Python script modifies Spotify resources to create larger fonts in Spotify desktop client.
 
 It is mostly useful if Spotify is being used on a larger screen such as a TV with high resolution, 
 which results in very small fonts in the Spotify client.
+
+A backup is created before modifying any files, 
+and the script supports restoring any changes it has made to Spotify (see **Restore changes** below)
 
 # Requirements
 
