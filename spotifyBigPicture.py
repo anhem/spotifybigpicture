@@ -28,6 +28,8 @@ def backupResources(resourcesPath):
     print 'Creating backup of %s to %s' % (resourcesPath, backupPath)
     if os.path.exists(backupPath):
         print 'backup already exists'
+    elif os.path.isdir(resourcesPath):
+        shutil.copytree(resourcesPath, backupPath)
     else:
         shutil.copy2(resourcesPath, backupPath)
 
@@ -35,7 +37,10 @@ def restoreResources(resourcesPath):
     backupPath = resourcesPath + '.bak'
     print 'restoring default font size from backup %s' % backupPath
     if os.path.exists(backupPath):
-        os.remove(resourcesPath)
+        if os.path.isdir(resourcesPath):
+            shutil.rmtree(resourcesPath)
+        else:
+            os.remove(resourcesPath)
         os.rename(backupPath, resourcesPath)
     else:
         print 'No backup file found, restore not possible'
