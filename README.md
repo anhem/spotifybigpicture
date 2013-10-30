@@ -21,7 +21,7 @@ Make sure Spotify is **not** running and then execute the following command:
 ```
 > python spotifyBigPicture.py
 ```
-Note that for **Linux** it must be executed with *sudo*
+Note that for **Linux** and **OS X** it must be executed with *sudo*
 
 Executing the script several times in a row will result in larger and larger fonts.
 For convenience you may instead specify the font size you want (see **Font size** below). 
